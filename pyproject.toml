@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spredle"
+version = "1.0.0"
+description = "Splicing PREdiction using Deep LEarning"
+readme = "README.md"
+requires-python = ">=3.12"
+
+authors = [
+  {name = "Han Sun", email = "hansun@stanford.edu"}
+]
+
+[project.urls]
+"Homepage" = "https://github.com/HaniceSun/spredle"
+
+[project.scripts]
+spredle = "spredle.cli:main"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.packages]
+find = { where = ["src"] }
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+smart = ["data/*.txt*", "config/*.yaml"]

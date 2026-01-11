@@ -1,0 +1,3 @@
+torch
+torchvision
+git+https://github.com/HaniceSun/bedparse.git

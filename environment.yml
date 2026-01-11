@@ -1,0 +1,19 @@
+name: spredle
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.13
+  - setuptools=80.9.0
+  - numpy=2.3.5
+  - scikit-learn=1.8.0
+  - matplotlib=3.10.8
+  - seaborn=0.13.2
+  - pandas=2.3.3
+  - PyYAML=6.0.3
+  - joblib=1.5.1
+  - pip
+  - pip:
+      - -r requirements.txt
+      - -e . 
