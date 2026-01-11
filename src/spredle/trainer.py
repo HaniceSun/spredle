@@ -106,7 +106,7 @@ class Trainer:
         self.load_checkpoint(epoch)
         self.validate(epoch, test=test)
         self.get_confusion(dataset='test')
-        self.log_metrics()
+        self.log_metrics(test=test)
 
     def get_confusion(self, dataset='val', labels=[0, 1], down_sampling=100):
         self.model.eval()
@@ -163,7 +163,7 @@ class Trainer:
             yp12 = (y_pred.argmax(axis=1) != 0).astype(int)
     
             cms = []
-            for yt,yp,name in [[yt2, yp2, 'donor'], [yt1, yp1, 'acceptor'], [yt12, yp12, 'ss']]:
+            for yt,yp,name in [[yt2, yp2, 'donor'], [yt1, yp1, 'acceptor'], [yt12, yp12, 'splice_site']]:
                 cm = confusion_matrix(yt, yp, labels=labels).ravel()
                 cms.append(','.join([str(x) for x in cm] + [name]))
                 print(f'{dataset} {name} confusion matrix (tn, fp, fn, tp): {cm}')
@@ -174,7 +174,7 @@ class Trainer:
         self.model.eval()
         pass
 
-    def log_metrics(self):
+    def log_metrics(self, test=False):
         df = pd.DataFrame()
         df['epoch'] = self.epochs
         df['train_loss'] = self.train_loss
@@ -199,12 +199,13 @@ class Trainer:
         else:
             df.to_csv(self.metrics_file, index=False, header=True, sep='\t')
 
-        plot_file = self.metrics_file.replace('.txt', '.pdf')
-        fig = plt.figure()
-        ax = fig.add_subplot()
-        ax.plot(df['epoch'], df['train_loss'], label='train_loss')
-        ax.plot(df['epoch'], df['val_loss'], label='val_loss')
-        plt.savefig(plot_file)
+        if not test:
+            plot_file = self.metrics_file.replace('.txt', '.pdf')
+            fig = plt.figure()
+            ax = fig.add_subplot()
+            ax.plot(df['epoch'], df['train_loss'], label='train_loss')
+            ax.plot(df['epoch'], df['val_loss'], label='val_loss')
+            plt.savefig(plot_file)
 
     def count_parameters(self, with_lazy=True, show_details=False):
         if with_lazy:
