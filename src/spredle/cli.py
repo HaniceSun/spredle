@@ -31,7 +31,7 @@ def get_parser():
     p4.add_argument('--train_file', type=str, default='dataset_train.pt', help='training dataset file')
     p4.add_argument('--val_file', type=str, default='dataset_val.pt', help='validation dataset file')
     p4.add_argument('--metrics_file', type=str, default='metrics.txt', help='metrics output file')
-    p4.add_argument('--lambda_lr', type=str, default=None, help='learning rate as a string seperated by comma for different epochs')
+    p4.add_argument('--lr_lambda', type=str, default=None, help='learning rate as a string seperated by comma for different epochs')
 
     p5 = subparsers.add_parser("test", help="test a trained model")
     p5.add_argument('--test_file', type=str, default='dataset_test.pt', help='test dataset file')
@@ -80,13 +80,13 @@ def main():
         ds_val.split_and_save_dataset(out_val)
 
     elif args.command == 'train':
-        lambda_lr = None
-        if args.lambda_lr:
-            lambda_lr = [float(str(x)) for x in args.lambda_lr.split(',')]
+        lr_lambda = None
+        if args.lr_lambda:
+            lr_lambda = [float(str(x)) for x in args.lr_lambda.split(',')]
 
         trainer = Trainer(config_file=args.config_file, model_name=args.model_name,
                           train_file=args.train_file, val_file=args.val_file,
-                          metrics_file=args.metrics_file, lambda_lr=lambda_lr)
+                          metrics_file=args.metrics_file, lr_lambda=lr_lambda)
         trainer.count_parameters()
         trainer.run()
     elif args.command == 'test':
