@@ -179,6 +179,7 @@ class Trainer:
         df['epoch'] = self.epochs
         df['train_loss'] = self.train_loss
         df['val_loss'] = self.val_loss
+        df['test_loss'] = self.test_loss
 
         if self.learning_rates:
             df['learning_rate'] = self.learning_rates
