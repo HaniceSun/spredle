@@ -32,6 +32,8 @@ spredle torch-dataset --input Homo_sapiens.GRCh38.115_seq_nt5000_flank40_sub100.
 
 spredle train --config_file config.yaml --model_name SpliceAI-1 --train_file Homo_sapiens.GRCh38.115_seq_nt5000_flank40_sub100_train.pt --val_file Homo_sapiens.GRCh38.115_seq_nt5000_flank40_sub100_val.pt --lr_lambda "1,1,1,1,1,1,0.5,0.25,0.125,0.0625,0.03125,0.015625"
 
+spredle train --config_file config.yaml --model_name Hyena-1 --train_file Homo_sapiens.GRCh38.115_seq_nt5000_flank40_sub100_train.pt --val_file Homo_sapiens.GRCh38.115_seq_nt5000_flank40_sub100_val.pt
+
 spredle predict --config_file config.yaml --model_name SpliceAI-1 --epoch 9 --pred_file predict.txt
 
 ```
