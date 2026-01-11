@@ -30,8 +30,8 @@ def get_parser():
     p4.add_argument('--model_name', type=str, default='SpliceAI', help='the model to train')
     p4.add_argument('--train_file', type=str, default='dataset_train.pt', help='training dataset file')
     p4.add_argument('--val_file', type=str, default='dataset_val.pt', help='validation dataset file')
-    p4.add_argument('--metrics_file', type=str, default='metrics.txt', help='metrics output file')
     p4.add_argument('--lr_lambda', type=str, default=None, help='learning rate as a string seperated by comma for different epochs')
+    p4.add_argument('--metrics_file', type=str, default=None, help='metrics output file, default to {model_name}_metrics.txt if not specified')
 
     p5 = subparsers.add_parser("test", help="test a trained model")
     p5.add_argument('--test_file', type=str, default='dataset_test.pt', help='test dataset file')
@@ -39,17 +39,10 @@ def get_parser():
     p5.add_argument('--epoch', type=int, default=4, help='the epoch of the trained model to load')
 
     p6 = subparsers.add_parser("predict", help="predict using a trained model")
-    p6.add_argument('--pred_seq', type=str, default='ATCG,ATCG', help='sequences to predict, separated by comma')
-    p6.add_argument('--pred_file', type=str, default='dataset_pred.pt', help='pred dataset file')
+    p6.add_argument('--pred_file', type=str, default='predict.txt', help='the input file for prediction')
     p6.add_argument('--model_name', type=str, default='SpliceAI', help='the model to test')
     p6.add_argument('--epoch', type=int, default=4, help='the epoch of the trained model to load')
     p6.add_argument('--out_file', type=str, default='predicted.txt', help='prediction output file')
-
-    p7 = subparsers.add_parser("saliency", help="generate saliency map using a trained model")
-    p7.add_argument('--sal_seq', type=str, default='ATCG,ATCG', help='sequences to get saliency map, separated by comma')
-    p7.add_argument('--out_file', type=str, default='saliency.txt', help='saliency output file')
-    p7.add_argument('--model_name', type=str, default='SpliceAI', help='the model to test')
-    p7.add_argument('--epoch', type=int, default=4, help='the epoch of the trained model to load')
 
     return parser
 
@@ -94,13 +87,8 @@ def main():
         trainer.test(model_name=args.model_name, epoch=args.epoch)
     elif args.command == 'predict':
         trainer = Trainer()
-        pred_seq = [s.strip() for s in args.pred_seq.split(',')]
-        trainer.predict(model_name=args.model_name, epoch=args.epoch, pred_seq=pred_seq,
+        trainer.predict(model_name=args.model_name, epoch=args.epoch,
                         pred_file=args.pred_file, out_file=args.out_file)
-    elif args.command == 'saliency':
-        trainer = Trainer()
-        sal_seq = [s.strip() for s in args.sal_seq.split(',')]
-        trainer.saliency_map(model_name=args.model_name, epoch=args.epoch, sal_seq=sal_seq, out_file=args.out_file)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ from .utils import *
 
 class Trainer:
     def __init__(self, config_file='config.yaml', model_name='SpliceAI', train_file=None, val_file=None, test_file=None,
-                 metrics_file='metrics.txt', lr_lambda=None, print_every_n_batches=100):
+                 metrics_file=None, lr_lambda=None, print_every_n_batches=100):
         self.config_dir = f'{resources.files("spredle").parent}/config'
         self.config = self.load_yaml(config_file)
         print(self.config)
@@ -26,7 +26,9 @@ class Trainer:
             self.val_dataset = torch.load(val_file, weights_only=False)
         if test_file and os.path.exists(test_file):
             self.test_dataset = torch.load(test_file, weights_only=False)
-        self.metrics_file = metrics_file
+
+        if not metrics_file:
+            self.metrics_file = f'{model_name}_metrics.txt'
 
         self.epochs = []
         self.train_loss = []
