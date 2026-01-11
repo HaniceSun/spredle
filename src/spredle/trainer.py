@@ -171,7 +171,17 @@ class Trainer:
     def predict(self, epoch=None, pred_file='predict.txt', out_file='predicted.txt', alphabet=['N', 'A', 'C', 'G', 'T']):
         self.load_checkpoint(epoch)
         self.model.eval()
-        pass
+        with torch.no_grad():
+            with open(pred_file) as inFile, open(out_file, 'w') as ouFile:
+                for line in inFile:
+                    seq = line.strip()
+                    seq2 = torch.tensor([[alphabet.index(x) if x in alphabet else 0 for x in seq]]).to(self.device)
+                    pred = self.model(seq2)
+                    pred = torch.softmax(pred, dim=1).cpu()
+                    clss = torch.argmax(pred, dim=1).squeeze().numpy().astype(str)
+                    pad = '.' * self.cfg.flank_size
+                    clss = pad + ''.join(clss) + pad
+                    ouFile.write(f'{seq}\n{clss}\n')
 
     def log_metrics(self, test=False):
         df = pd.DataFrame()
