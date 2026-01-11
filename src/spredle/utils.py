@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import torch
 torch.manual_seed(42)
@@ -6,6 +7,10 @@ matplotlib.use('Agg')
 import pylab as plt
 import seaborn as sns
 from importlib import resources
+
+hyena_dir = f'{resources.files("spredle").parent.parent}/vendor/hyena'
+sys.path.append(hyena_dir)
+from hyena import *
 
 class CustomLoss(torch.nn.Module):
     def __init__(self):
