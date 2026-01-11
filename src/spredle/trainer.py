@@ -100,7 +100,7 @@ class Trainer:
                     print(f'{ds} epoch:{epoch} batch:{nb} loss:{loss.detach().item()}', flush=True)
         loss_avg = loss_total / len(dataset)
         loss_list.append(loss_avg)
-        print(f'{ds} avg loss: {" ".join([str(x) for x in self.val_loss])}')
+        print(f'{ds} avg loss: {" ".join([str(x) for x in loss_list])}')
 
     def test(self, epoch, test=True):
         self.load_checkpoint(epoch)
@@ -169,7 +169,7 @@ class Trainer:
                 print(f'{dataset} {name} confusion matrix (tn, fp, fn, tp): {cm}')
             cml.append(';'.join(cms))
 
-    def predict(self, epoch=None, pred_seq=[], pred_file='pred_dataset.pt', out_file='predicted.txt', alphabet=['N', 'A', 'C', 'G', 'T']):
+    def predict(self, epoch=None, pred_file='predict.txt', out_file='predicted.txt', alphabet=['N', 'A', 'C', 'G', 'T']):
         self.load_checkpoint(epoch)
         self.model.eval()
         pass

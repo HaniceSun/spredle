@@ -35,13 +35,14 @@ def get_parser():
 
     p5 = subparsers.add_parser("test", help="test a trained model")
     p5.add_argument('--config_file', type=str, default='config.yaml', help='configuration file for model training')
-    p5.add_argument('--test_file', type=str, default='dataset_test.pt', help='test dataset file')
     p5.add_argument('--model_name', type=str, default='SpliceAI-1', help='the model to test')
+    p5.add_argument('--test_file', type=str, default='dataset_test.pt', help='test dataset file')
     p5.add_argument('--epoch', type=int, default=4, help='the epoch of the trained model to load')
 
     p6 = subparsers.add_parser("predict", help="predict using a trained model")
-    p6.add_argument('--pred_file', type=str, default='predict.txt', help='the input file for prediction')
+    p6.add_argument('--config_file', type=str, default='config.yaml', help='configuration file for model training')
     p6.add_argument('--model_name', type=str, default='SpliceAI-1', help='the model to test')
+    p6.add_argument('--pred_file', type=str, default='predict.txt', help='the input file for prediction')
     p6.add_argument('--epoch', type=int, default=4, help='the epoch of the trained model to load')
     p6.add_argument('--out_file', type=str, default='predicted.txt', help='prediction output file')
 
@@ -88,9 +89,8 @@ def main():
                           test_file=args.test_file)
         trainer.test(epoch=args.epoch)
     elif args.command == 'predict':
-        trainer = Trainer()
-        trainer.predict(model_name=args.model_name, epoch=args.epoch,
-                        pred_file=args.pred_file, out_file=args.out_file)
+        trainer = Trainer(config_file=args.config_file, model_name=args.model_name)
+        trainer.predict(epoch=args.epoch, pred_file=args.pred_file, out_file=args.out_file)
 
 
 if __name__ == '__main__':
