@@ -4,7 +4,7 @@ from .utils import *
 
 class Trainer:
     def __init__(self, config_file='config.yaml', model_name='SpliceAI', train_file=None, val_file=None, test_file=None,
-                 metrics_file='metrics.txt', lambda_lr=None, print_every_n_batches=100):
+                 metrics_file='metrics.txt', lr_lambda=None, print_every_n_batches=100):
         self.config_dir = f'{resources.files("spredle").parent}/config'
         self.config = self.load_yaml(config_file)
         print(self.config)
@@ -38,8 +38,8 @@ class Trainer:
 
         self.learning_rates = []
         self.lr_scheduler = None
-        if lambda_lr:
-            self.lr_scheduler = LambdaLR(self.optimizer, lr_lambda=lambda epoch: lambda_lr[epoch])
+        if lr_lambda:
+            self.lr_scheduler = LambdaLR(self.optimizer, lr_lambda=lambda epoch: lr_lambda[epoch])
 
         self.early_stopping = None
         if cfg.early_stopping:
@@ -308,7 +308,7 @@ class Trainer:
                     break
 
             if self.lr_scheduler:
-                self.lr_reduler.step()
+                self.lr_scheduler.step()
 
         self.log_metrics()
 
