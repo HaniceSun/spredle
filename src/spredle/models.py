@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import confusion_matrix
 from torch.optim.lr_scheduler import LambdaLR
+from .utils import *
 
 ## SplcieAI
 
@@ -114,7 +115,7 @@ class HyenaGPT(nn.Module):
         self.position_embedding = nn.Embedding(cfg.max_seq_len, cfg.embed_dim)
         self.blocks = nn.Sequential(*[HyenaBlock(cfg.embed_dim, cfg.max_seq_len, cfg.dropout) for _ in range(cfg.num_layers)])
         self.norm = nn.LayerNorm(cfg.embed_dim)
-        self.head = torch.nn.Conv1d(cfg.embed_dim, cfg.out_classes, 1)
+        self.head = torch.nn.Conv1d(cfg.embed_dim, cfg.out_channels, 1)
         self.flank_size = cfg.flank_size
 
     def forward(self, x):

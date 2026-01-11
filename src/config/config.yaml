@@ -54,3 +54,19 @@ models:
       learning_rate: 1e-3
       weight_decay:  0.01
       early_stopping: false
+
+  Hyena-1:
+    class: HyenaGPT
+    params:
+      in_channels: 4
+      out_channels: 3
+      vocab_size: 5
+      max_seq_len: 5080
+      embed_dim: 16
+      num_layers: 4
+      num_heads: 4
+      dropout: 0.1
+      flank_size: 40
+      learning_rate: 1e-3
+      weight_decay:  0.01
+      early_stopping: false

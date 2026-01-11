@@ -13,6 +13,7 @@ dependencies:
   - pandas=2.3.3
   - PyYAML=6.0.3
   - joblib=1.5.1
+  - einops=0.8.1
   - pip
   - pip:
       - -r requirements.txt
