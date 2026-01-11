@@ -7,7 +7,6 @@ class Trainer:
                  metrics_file=None, lr_lambda=None, print_every_n_batches=100):
         self.config_dir = f'{resources.files("spredle").parent}/config'
         self.config = self.load_yaml(config_file)
-        print(self.config)
 
         self.model_name = model_name
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
