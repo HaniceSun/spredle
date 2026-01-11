@@ -102,10 +102,11 @@ class Trainer:
         loss_list.append(loss_avg)
         print(f'{ds} avg loss: {" ".join([str(x) for x in self.val_loss])}')
 
-    def test(self, model_name, epoch, test=True):
-        self.load_checkpoint(epoch, model_name)
+    def test(self, epoch, test=True):
+        self.load_checkpoint(epoch)
         self.validate(epoch, test=test)
         self.get_confusion(dataset='test')
+        self.log_metrics()
 
     def get_confusion(self, dataset='val', labels=[0, 1], down_sampling=100):
         self.model.eval()
@@ -168,8 +169,8 @@ class Trainer:
                 print(f'{dataset} {name} confusion matrix (tn, fp, fn, tp): {cm}')
             cml.append(';'.join(cms))
 
-    def predict(self, epoch=None, model_name=None, pred_seq=[], pred_file='pred_dataset.pt', out_file='predicted.txt', alphabet=['N', 'A', 'C', 'G', 'T']):
-        self.load_checkpoint(epoch, model_name)
+    def predict(self, epoch=None, pred_seq=[], pred_file='pred_dataset.pt', out_file='predicted.txt', alphabet=['N', 'A', 'C', 'G', 'T']):
+        self.load_checkpoint(epoch)
         self.model.eval()
         pass
 
@@ -204,39 +205,6 @@ class Trainer:
         ax.plot(df['epoch'], df['val_loss'], label='val_loss')
         plt.savefig(plot_file)
 
-    def saliency_map(self, epoch=None, model_name=None, sal_seq=[], out_file='saliency.txt', target=1, alphabet=['N', 'A', 'C', 'G', 'T']):
-        self.load_checkpoint(epoch, model_name)
-        self.model.eval()
-        for n, seq in enumerate(sal_seq):
-            seq2 = torch.tensor([[alphabet.index(x) if x in alphabet else 0 for x in seq]])
-            X = self.model.OneHot(seq2)
-
-            X.requires_grad = True
-            pred = self.model(X, from_onehot=True)
-            loss = self.loss_fn(pred, torch.tensor([target]).to(self.device))
-            loss.backward()
-
-            #saliency = X.grad.abs()
-            #sal = np.sum(np.multiply(saliency.squeeze().cpu().numpy(), X.squeeze().cpu().numpy()), axis=0)
-
-            saliency = -X.grad
-            sal = np.clip(np.sum(np.multiply(saliency.squeeze().cpu().numpy(), X.detach().squeeze().cpu().numpy()), axis=0), 0, None)
-
-            df = pd.DataFrame({'index':list(range(len(seq))), 'seq':list(seq), 'saliency':list(sal)})
-            out_file_n = out_file.replace('.txt', f'_seq{n}.txt')
-            plot_file_n = out_file.replace('.txt', f'_seq{n}.pdf')
-            df.to_csv(out_file_n, index=False, header=True, sep='\t')
-            fig = plt.figure(figsize=[12, 6])
-            ax = fig.add_subplot()
-            ax.bar(df['index'], df['saliency'])
-            ax.set_xlim(-1, len(df['index']))
-            ax.set_xticks(df['index'])
-            ax.set_xticklabels(df['seq'], fontsize=8)
-            ax.set_ylabel('Magnitude of saliency values')
-            plt.gca().ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
-            plt.tight_layout()
-            plt.savefig(plot_file_n)
-
     def count_parameters(self, with_lazy=True, show_details=False):
         if with_lazy:
             X,y = next(iter(self.train_dataset))
@@ -265,10 +233,8 @@ class Trainer:
         out_file = f'{self.model_name}_ckpt_{epoch}.pt'
         torch.save(checkpoint, out_file) 
 
-    def load_checkpoint(self, epoch, model_name=None):
-        if not model_name:
-            model_name = self.model_name
-        in_file = f'{model_name}_ckpt_{epoch}.pt'
+    def load_checkpoint(self, epoch):
+        in_file = f'{self.model_name}_ckpt_{epoch}.pt'
         if os.path.exists(in_file):
             print(f'loading checkpoint from {in_file}')
             checkpoint = torch.load(in_file, map_location=self.device)
