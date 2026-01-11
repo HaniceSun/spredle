@@ -5,7 +5,7 @@ from .utils import *
 class Trainer:
     def __init__(self, config_file='config.yaml', model_name='SpliceAI', train_file=None, val_file=None, test_file=None,
                  metrics_file='metrics.txt', lambda_lr=None, print_every_n_batches=100):
-        self.config_dir = f'{resources.files("spred").parent}/config'
+        self.config_dir = f'{resources.files("spredle").parent}/config'
         self.config = self.load_yaml(config_file)
         print(self.config)
 
