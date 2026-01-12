@@ -193,8 +193,6 @@ class Trainer:
             df['val_loss'] = self.val_loss
         if self.test_loss:
             df['test_loss'] = self.test_loss
-        if self.best_epochs:
-            df['best_epoch'] = self.best_epochs
 
         if self.train_confusion:
             df['train_confusion'] = self.train_confusion
@@ -203,6 +201,8 @@ class Trainer:
         if self.test_confusion:
             df['test_confusion'] = self.test_confusion
 
+        if self.best_epochs:
+            df['best_epoch'] = self.best_epochs
         if self.learning_rates:
             df['learning_rate'] = self.learning_rates
 
