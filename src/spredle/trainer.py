@@ -82,6 +82,7 @@ class Trainer:
         loss_list = self.val_loss
         if test:
             ds = 'test'
+            self.epochs.append(epoch)
             dataset = self.test_dataset
             loss_list = self.test_loss
 
@@ -185,8 +186,12 @@ class Trainer:
 
     def log_metrics(self, test=False):
         df = pd.DataFrame()
-        df['epoch'] = self.epochs
+        cols = ['epoch', 'best_epoch', 'learning_rate',
+                      'train_loss', 'val_loss', 'test_loss',
+                      'train_confusion', 'val_confusion', 'test_confusion']
+        df = pd.DataFrame('.', index=range(len(self.epochs)), columns=cols)
 
+        df['epoch'] = self.epochs
         if self.train_loss:
             df['train_loss'] = self.train_loss
         if self.val_loss:
