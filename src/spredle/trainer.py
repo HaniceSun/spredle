@@ -186,13 +186,13 @@ class Trainer:
     def log_metrics(self, test=False):
         df = pd.DataFrame()
         df['epoch'] = self.epochs
-        df['train_loss'] = self.train_loss
-        df['val_loss'] = self.val_loss
-        df['test_loss'] = self.test_loss
 
-        if self.learning_rates:
-            df['learning_rate'] = self.learning_rates
-
+        if self.train_loss:
+            df['train_loss'] = self.train_loss
+        if self.val_loss:
+            df['val_loss'] = self.val_loss
+        if self.test_loss:
+            df['test_loss'] = self.test_loss
         if self.best_epochs:
             df['best_epoch'] = self.best_epochs
 
@@ -202,6 +202,9 @@ class Trainer:
             df['val_confusion'] = self.val_confusion
         if self.test_confusion:
             df['test_confusion'] = self.test_confusion
+
+        if self.learning_rates:
+            df['learning_rate'] = self.learning_rates
 
         if os.path.exists(self.metrics_file):
             df.to_csv(self.metrics_file, index=False, header=False, sep='\t', mode='a')
