@@ -24,8 +24,8 @@ def get_parser():
 
     p3 = subparsers.add_parser("torch-dataset", help="generate torch dataset from the processed files")
     p3.add_argument('--input', type=str, default='Homo_sapiens.GRCh38.115_seq_nt5000_flank5000.txt', help='input file of the processed data')
-    p3.add_argument('--train_chroms', type=str, default=None, help='the chromosomes used as train dataset')
-    p3.add_argument('--val_chroms', type=str, default=None, help='the chromosomes used as val dataset')
+    p3.add_argument('--train_chroms', type=str, default=None, help='the chromosomes used as train dataset, default to the chroms used in the SpliceAI paper')
+    p3.add_argument('--val_chroms', type=str, default=None, help='the chromosomes used as val dataset, default to the chroms used in the SpliceAI paper')
 
     p4 = subparsers.add_parser("train", help="train the deep learning models")
     p4.add_argument('--config_file', type=str, default='config.yaml', help='configuration file for model training')
