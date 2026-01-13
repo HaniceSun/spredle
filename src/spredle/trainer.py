@@ -10,6 +10,7 @@ class Trainer:
 
         self.model_name = model_name
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(f'using device: {self.device}', flush=True)
         model_class = eval(self.config['models'][model_name]['class'])
         cfg = Config(self.config['models'][model_name]['params'])
         cfg.device = self.device
