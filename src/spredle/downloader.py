@@ -3,7 +3,7 @@ import gzip
 import subprocess
 
 class DataDownloader:
-    def __init__(self, genome_reference=None, gene_annotation=None):
+    def __init__(self):
         self.chrs = ['chr' + str(x) for x in range(1, 23)] + ['chrX', 'chrY']
         self.gene_filter = ['Ensembl_canonical', 'protein_coding']
 

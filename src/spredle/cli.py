@@ -53,8 +53,8 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
     if args.command == 'download-training-data':
-        dd = DataDownloader(genome_reference=args.genome_reference, gene_annotation=args.gene_annotation)
-        dd.download_training_data()
+        dd = DataDownloader()
+        dd.download_training_data(genome_reference=args.genome_reference, gene_annotation=args.gene_annotation)
     if args.command == 'preprocess':
         dp = DataProcessor()
         dp.cut_seq(in_file=args.input, nt=args.nt, flank=args.flank)
