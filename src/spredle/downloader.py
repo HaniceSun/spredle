@@ -19,10 +19,10 @@ class DataDownloader:
 
 
         cmd = f'wget {genome_reference}; wget {gene_annotation}; gunzip {self.gene_file}'
-        #subprocess.run(cmd, shell=True, check=True)
+        subprocess.run(cmd, shell=True, check=True)
 
-        #self.fasta_concat(self.genome_file)
-        #self.gtf_to_bed12(self.gene_file.split('.gz')[0])
+        self.fasta_concat(self.genome_file)
+        self.gtf_to_bed12(self.gene_file.split('.gz')[0])
         self.get_seq_from_reference_bed12()
 
     def gtf_to_bed12(self, gtf):
