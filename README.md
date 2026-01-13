@@ -21,7 +21,7 @@ conda activate spredle
 
 # Quick Start
 
-```
+``` bash
 spredle download-training-data
 
 spredle preprocess --nt 5000 --flank 40
