@@ -89,7 +89,7 @@ class DataDownloader:
                     tx_seq = tx_seq[::-1].translate(trans)
                     tx_seq_y = tx_seq_y[::-1]
                 tx_seq_y = ''.join([str(x) for x in tx_seq_y])
-                ouFile.write(chr_prefix + line + '\t' + ','.join([str(x) for x in exon_start]) + '\t' + ','.join([str(x) for x in exon_end]) + '\t' + tx_seq + '\t' + tx_seq_y + '\n')
+                ouFile.write(ch_prefix + line + '\t' + ','.join([str(x) for x in exon_start]) + '\t' + ','.join([str(x) for x in exon_end]) + '\t' + tx_seq + '\t' + tx_seq_y + '\n')
         inFile.close()
         ouFile.close()
 
