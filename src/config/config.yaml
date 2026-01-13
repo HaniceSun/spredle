@@ -4,8 +4,8 @@ models:
     params:
       NWD: '[[32, 11, 1]] * 4'
       in_channels: 4
-      out_channels: 3
-      n_channels: 32
+      out_channels: 32
+      n_classes: 3
       n_blocks: 4
       context_length: 5000
       flank_size: 40
@@ -18,8 +18,8 @@ models:
     params:
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4'
       in_channels: 4
-      out_channels: 3
-      n_channels: 32
+      out_channels: 32
+      n_classes: 3
       n_blocks: 4
       context_length: 5000
       flank_size: 40
@@ -32,8 +32,8 @@ models:
     params:
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4 + [[32, 21, 10]] * 4'
       in_channels: 4
-      out_channels: 3
-      n_channels: 32
+      out_channels: 32
+      n_classes: 3
       n_blocks: 4
       context_length: 5000
       flank_size: 5000
@@ -46,8 +46,8 @@ models:
     params:
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4 + [[32, 21, 10]] * 4 + [[32, 41, 25]] * 4'
       in_channels: 4
-      out_channels: 3
-      n_channels: 32
+      out_channels: 32
+      n_classes: 3
       n_blocks: 4
       context_length: 5000
       flank_size: 5000
@@ -59,7 +59,7 @@ models:
     class: HyenaGPT
     params:
       in_channels: 4
-      out_channels: 3
+      n_classes: 3
       vocab_size: 5
       max_seq_len: 5080
       embed_dim: 16

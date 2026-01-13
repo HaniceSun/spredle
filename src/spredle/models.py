@@ -40,17 +40,17 @@ class SpliceAI(torch.nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
-        self.conv1 = nn.Conv1d(cfg.in_channels, cfg.n_channels, 1)
-        self.conv2 = nn.Conv1d(cfg.n_channels, cfg.n_channels, 1)
+        self.conv1 = nn.Conv1d(cfg.in_channels, cfg.out_channels, 1)
+        self.conv2 = nn.Conv1d(cfg.out_channels, cfg.out_channels, 1)
         self.resblocks = nn.ModuleList()
         self.convs = nn.ModuleList()
         for i in range(len(cfg.NWD)):
             n,w,d = cfg.NWD[i]
             self.resblocks.append(ResidualBlock(n, w, d))
             if (i+1) % cfg.n_blocks == 0:
-                self.convs.append(nn.Conv1d(cfg.n_channels, cfg.n_channels, 1))
-        self.bn1 = nn.BatchNorm1d(cfg.n_channels)
-        self.conv3 = nn.Conv1d(cfg.n_channels, cfg.out_channels, 1)
+                self.convs.append(nn.Conv1d(cfg.out_channels, cfg.out_channels, 1))
+        self.bn1 = nn.BatchNorm1d(cfg.out_channels)
+        self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
 
     def forward(self, x, from_onehot=False):
         if not from_onehot:
@@ -115,7 +115,7 @@ class HyenaGPT(nn.Module):
         self.position_embedding = nn.Embedding(cfg.max_seq_len, cfg.embed_dim)
         self.blocks = nn.Sequential(*[HyenaBlock(cfg.embed_dim, cfg.max_seq_len, cfg.dropout) for _ in range(cfg.num_layers)])
         self.norm = nn.LayerNorm(cfg.embed_dim)
-        self.head = torch.nn.Conv1d(cfg.embed_dim, cfg.out_channels, 1)
+        self.head = torch.nn.Conv1d(cfg.embed_dim, cfg.n_classes, 1)
         self.flank_size = cfg.flank_size
 
     def forward(self, x):
