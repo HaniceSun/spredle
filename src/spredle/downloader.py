@@ -7,10 +7,13 @@ class DataDownloader:
         self.chrs = ['chr' + str(x) for x in range(1, 23)] + ['chrX', 'chrY']
         self.gene_filter = ['Ensembl_canonical', 'protein_coding']
 
-    def download_training_data(self, genome_reference=None, gene_annotation=None):
+    def download_training_data(self, genome_reference=None, gene_annotation=None, chrom_filter=None, gene_filter=None):
+        if not chrom_filter:
+            self.chrs = ['chr' + str(x) for x in range(1, 23)] + ['chrX', 'chrY']
+        if not gene_filter:
+            self.gene_filter = ['Ensembl_canonical', 'protein_coding']
         if not genome_reference:
             genome_reference = 'https://ftp.ensembl.org/pub/current_fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz'
-
         if not gene_annotation: 
             gene_annotation = 'https://ftp.ensembl.org/pub/current_gtf/homo_sapiens/Homo_sapiens.GRCh38.115.gtf.gz'
 

@@ -14,6 +14,8 @@ def get_parser():
     p1 = subparsers.add_parser("download-training-data", help="get training data from Ensembl")
     p1.add_argument('--genome_reference', type=str, default=None, help='downloading Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz from Ensembl if not specified')
     p1.add_argument('--gene_annotation', type=str, default=None, help='downloading Homo_sapiens.GRCh38.115.gtf.gz from Ensembl if not specified')
+    p1.add_argument('--chrom_filter', type=str, default=None, help='default to chr1-chr22,chrX,chrY if not specified')
+    p1.add_argument('--gene_filter', type=str, default=None, help='default to canonical transcripts of protein_coding genes only if not specified')
 
     p2 = subparsers.add_parser("preprocess", help="preprocess the downloaded training data")
     p2.add_argument('--input', type=str, default='Homo_sapiens.GRCh38.115_seq.txt', help='the input file')
@@ -54,7 +56,8 @@ def main():
     args = parser.parse_args()
     if args.command == 'download-training-data':
         dd = DataDownloader()
-        dd.download_training_data(genome_reference=args.genome_reference, gene_annotation=args.gene_annotation)
+        dd.download_training_data(genome_reference=args.genome_reference, gene_annotation=args.gene_annotation,
+                                  chrom_filter=args.chrom_filter, gene_filter=args.gene_filter)
     if args.command == 'preprocess':
         dp = DataProcessor()
         dp.cut_seq(in_file=args.input, nt=args.nt, flank=args.flank)
