@@ -36,6 +36,19 @@ spredle train --config_file config.yaml --model_name Hyena-1 --train_file Homo_s
 
 spredle predict --config_file config.yaml --model_name SpliceAI-1 --epoch 9 --pred_file predict.txt
 
+# applied to mouse data
+
+spredle download-training-data --genome_reference https://ftp.ensembl.org/pub/current/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz  --gene_annotation https://ftp.ensembl.org/pub/current/gtf/mus_musculus/Mus_musculus.GRCm39.115.gtf.gz
+
+spredle preprocess --nt 5000 --flank 5000 --input Mus_musculus.GRCm39.115_seq.txt
+
+spredle torch-dataset --input Mus_musculus.GRCm39.115_seq_nt5000_flank5000.txt
+
+spredle train --config_file config.yaml --model_name SpliceAI-4 --train_file Mus_musculus.GRCm39.115_seq_nt5000_flank5000_train.pt --val_file Mus_musculus.GRCm39.115_seq_nt5000_flank5000_val.pt --lr_lambda "1,1,1,1,1,1,0.5,0.25,0.125,0.0625,0.03125,0.015625"
+
+spredle predict --config_file config.yaml --model_name SpliceAI-4 --epoch 9 --pred_file predict.txt
+
+
 ```
 
 ## Author and License
