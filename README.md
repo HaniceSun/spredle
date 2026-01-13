@@ -6,7 +6,7 @@
 
 ## Overview
 
-spredle is a Python package for predicting RNA splicing from DNA sequences using deep learning models. It is designed to begin by reproducing the SpliceAI (Jaganathan et al. 2019) model in PyTorch, rather than the original TensorFlow v1 implementation, and then to explore additional architectures such as Transformer and Hyena, with the goal of further improving splicing prediction performance. Furthermore, spredle will be extended to predict tissue-specific splicing by applying to long reads RNA-seq data.
+spredle is a Python package for predicting RNA splicing from DNA sequences using deep learning models. It is designed to begin by reproducing the SpliceAI (Jaganathan et al. 2019) model in PyTorch instead of the original TensorFlow (v1) implementation, and then to explore additional architectures such as Transformer and Hyena, with the goal of further improving splicing prediction performance. spredle will also be extended to predict tissue-specific splicing by applying to long reads RNA-seq data.
 
 ## Installation
 
