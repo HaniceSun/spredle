@@ -275,10 +275,10 @@ class Trainer:
         except Exception as e:
             print(f'Error loading config file {e}')
 
-    def run(self, load_epoch=None, start_epoch=0, end_epoch=10, validate=True):
-        if load_epoch is not None:
-            self.load_checkpoint(load_epoch)
-            start_epoch = load_epoch + 1
+    def run(self, resume_epoch=None, start_epoch=0, end_epoch=10, validate=True):
+        if resume_epoch is not None:
+            self.load_checkpoint(resume_epoch)
+            start_epoch = resume_epoch + 1
 
         for epoch in range(start_epoch, end_epoch):
             self.train(epoch)

@@ -34,6 +34,7 @@ def get_parser():
     p4.add_argument('--val_file', type=str, default='dataset_val.pt', help='validation dataset file')
     p4.add_argument('--lr_lambda', type=str, default=None, help='learning rate as a string seperated by comma for different epochs')
     p4.add_argument('--metrics_file', type=str, default=None, help='metrics output file, default to {model_name}_metrics.txt if not specified')
+    p4.add_argument('--resume_epoch', type=int, default=None, help='resume training from a specific epoch if specified')
 
     p5 = subparsers.add_parser("test", help="test a trained model")
     p5.add_argument('--config_file', type=str, default='config.yaml', help='configuration file for model training')
@@ -86,7 +87,7 @@ def main():
                           train_file=args.train_file, val_file=args.val_file,
                           metrics_file=args.metrics_file, lr_lambda=lr_lambda)
         trainer.count_parameters()
-        trainer.run()
+        trainer.run(resume_epoch=args.resume_epoch)
     elif args.command == 'test':
         trainer = Trainer(config_file=args.config_file, model_name=args.model_name,
                           test_file=args.test_file)
