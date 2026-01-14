@@ -128,22 +128,22 @@ class Trainer:
                 X, y = X.to(self.device), y.to(self.device)
                 pred = self.model(X)
 
-                if self.cfg.out_channels == 2:
+                if self.cfg.n_classes == 2:
                     y_true.extend(y.cpu().numpy())
                     y_pred.extend(pred.argmax(dim=1).cpu().numpy())
 
-                elif self.cfg.out_channels == 3:
+                elif self.cfg.n_classes == 3:
                     y_true.append(y.cpu().numpy())
                     y_pred.append(pred.cpu().numpy())
                     if down_sampling and nb > down_sampling:
                         break
 
-        if self.cfg.out_channels == 2:
+        if self.cfg.n_classes == 2:
             cm = confusion_matrix(y_true, y_pred, labels=labels).ravel()
             cml.append(','.join([str(x) for x in cm]))
             print(f'{dataset} confusion matrix (tn, fp, fn, tp): {cm}')
 
-        elif self.cfg.out_channels == 3:
+        elif self.cfg.n_classes == 3:
             y_pred = np.concatenate(y_pred)
             y_true = np.concatenate(y_true)
     
