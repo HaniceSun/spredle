@@ -75,7 +75,7 @@ class Trainer:
         if self.lr_scheduler:
             lr = self.lr_scheduler.get_last_lr()[0]
             self.learning_rates.append(lr)
-        print(f'train avg loss: {" ".join([str(x) for x in self.train_loss])}')
+        print(f'train epoch:{epoch} avg loss: {" ".join([str(x) for x in self.train_loss])}')
 
     def validate(self, epoch, test=False):
         ds = 'val'
@@ -101,7 +101,7 @@ class Trainer:
                     print(f'{ds} epoch:{epoch} batch:{nb} loss:{loss.detach().item()}', flush=True)
         loss_avg = loss_total / len(dataset)
         loss_list.append(loss_avg)
-        print(f'{ds} avg loss: {" ".join([str(x) for x in loss_list])}')
+        print(f'{ds} epoch:{epoch} avg loss: {" ".join([str(x) for x in loss_list])}')
 
     def test(self, epoch, test=True):
         self.load_checkpoint(epoch)
