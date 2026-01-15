@@ -23,6 +23,18 @@ class CustomLoss(torch.nn.Module):
         s = s1 + s2 + s3
         return(-torch.mean(s))
 
+class CustomLossClsReg(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, y_pred, y_true, epsilon=1e-10):
+        s1 = y_true[:, 0, :] * torch.log(y_pred[:, 0, :] + epsilon)
+        s2 = y_true[:, 1, :] * torch.log(y_pred[:, 1, :] + epsilon)
+        s3 = y_true[:, 2, :] * torch.log(y_pred[:, 2, :] + epsilon)
+        s4 = - ((y_true[:, 3, :] - y_pred[:, 3, :]) ** 2)
+        s = s1 + s2 + s3 + s4
+        return(-torch.mean(s))
+
 class Config:
     def __init__(self, config):
         for k, v in config.items():

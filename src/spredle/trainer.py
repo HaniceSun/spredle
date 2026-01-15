@@ -16,7 +16,13 @@ class Trainer:
         cfg.device = self.device
         self.model = model_class(cfg).to(self.device)
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=cfg.learning_rate, weight_decay=cfg.weight_decay)
-        self.loss_fn = CustomLoss()
+        if 'task' not in vars(cfg) or cfg.task == 'cls' :
+            self.loss_fn = CustomLoss()
+        elif 'task' in vars(cfg) and cfg.task == 'reg':
+            self.loss_fn = torch.nn.MSELoss()
+        elif 'task' in vars(cfg) and cfg.task == 'cls_reg':
+            self.loss_fn = CustomLossClsReg()
+
         self.print_every_n_batches = print_every_n_batches
 
         self.train_dataset, self.val_dataset, self.test_dataset = None, None, None

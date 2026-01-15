@@ -50,7 +50,13 @@ class SpliceAI(torch.nn.Module):
             if (i+1) % cfg.n_blocks == 0:
                 self.convs.append(nn.Conv1d(cfg.out_channels, cfg.out_channels, 1))
         self.bn1 = nn.BatchNorm1d(cfg.out_channels)
-        self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
+        if 'task' not in vars(cfg) or cfg.task == 'cls':
+            self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
+        elif 'task' in vars(cfg) and cfg.task == 'reg':
+            self.conv4 = nn.Conv1d(cfg.out_channels, 1, 1)
+        elif 'task' in vars(cfg) and cfg.task == 'cls_reg':
+            self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
+            self.conv4 = nn.Conv1d(cfg.out_channels, 1, 1)
 
     def forward(self, x, from_onehot=False):
         if not from_onehot:
@@ -69,8 +75,18 @@ class SpliceAI(torch.nn.Module):
 
         skip = nn.functional.pad(skip, [-self.cfg.flank_size, -self.cfg.flank_size])
         skip = self.bn1(skip)
-        out = self.conv3(skip)
-        out = torch.softmax(out, dim=1)
+        if 'task' not in vars(self.cfg) or self.cfg.task == 'cls':
+            out = self.conv3(skip)
+            out = torch.softmax(out, dim=1)
+        elif 'task' in vars(self.cfg) and self.cfg.task == 'reg':
+            out = self.conv4(skip)
+            out = torch.sigmoid(out)
+        elif 'task' in vars(self.cfg) and self.cfg.task == 'cls_reg':
+            out_cls = self.conv3(skip)
+            out_cls = torch.softmax(out_cls, dim=1)
+            out_reg = self.conv4(skip)
+            out_reg = torch.sigmoid(out_reg)
+            out = torch.cat([out_cls, out_reg], dim=1)
         return out
 
     def OneHot(self, x, alphabet=[1, 2, 3, 4]):
