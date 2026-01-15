@@ -64,6 +64,14 @@ class Config:
                 setattr(self, k, eval(v))
             else:
                 setattr(self, k, v)
+        if not hasattr(self, 'task'):
+            self.task = 'classification' 
+        if not hasattr(self, 'n_classes'):
+            self.n_classes = 3
+        if not hasattr(self, 'n_regs'):
+            self.n_regs = 1
+        if not hasattr(self, 'n_heads'):
+            self.n_heads = 1
 
 class EarlyStopping:
     def __init__(self, patience=3, delta=0):

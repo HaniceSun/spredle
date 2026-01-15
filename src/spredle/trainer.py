@@ -17,11 +17,11 @@ class Trainer:
         self.model = model_class(cfg).to(self.device)
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=cfg.learning_rate, weight_decay=cfg.weight_decay)
         if cfg.task == 'classification' :
-            self.loss_fn = CustomLoss(n_classes=cfg.n_classes)
+            self.loss_fn = CustomLoss(n_classes=cfg.n_classes, n_heads=cfg.n_heads)
         elif cfg.task == 'regression':
-            self.loss_fn = CustomLossReg(n_regs=cfg.n_regs)
+            self.loss_fn = CustomLossReg(n_regs=cfg.n_regs, n_heads=cfg.n_heads)
         elif cfg.task == 'classification+regression':
-            self.loss_fn = CustomLossClsReg(n_classes=cfg.n_classes, n_regs=cfg.n_regs)
+            self.loss_fn = CustomLossClsReg(n_classes=cfg.n_classes, n_regs=cfg.n_regs, n_heads=cfg.n_heads)
 
         self.print_every_n_batches = print_every_n_batches
 

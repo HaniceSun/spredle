@@ -37,7 +37,7 @@ class SpliceAI(torch.nn.Module):
     NWD4 = [[nF, 11, 1]] * nRB + [[nF, 11, 4]] * nRB + [[nF, 21, 10]] * nRB + [[nF, 41, 25]] * nRB
     '''
 
-    def __init__(self, cfg, n_classes=3, n_regs=1, n_heads=1):
+    def __init__(self, cfg, task='classification', n_classes=3, n_regs=1, n_heads=1):
         super().__init__()
         self.cfg = cfg
         self.conv1 = nn.Conv1d(cfg.in_channels, cfg.out_channels, 1)
@@ -51,21 +51,24 @@ class SpliceAI(torch.nn.Module):
                 self.convs.append(nn.Conv1d(cfg.out_channels, cfg.out_channels, 1))
         self.bn1 = nn.BatchNorm1d(cfg.out_channels)
 
+        self.task = task
         self.n_classes = n_classes
         self.n_regs = n_regs
         self.n_heads = n_heads
-        if 'n_classes' in vars(cfg):
+        if hasattr(cfg, 'task'):
+            self.task = 'classification'
+        if hasattr(cfg, 'n_classes'):
             self.n_classes = cfg.n_classes
-        if 'n_regs' in vars(cfg):
+        if hasattr(cfg, 'n_regs'):
             self.n_regs = cfg.n_regs
-        if 'n_heads' in vars(cfg):
+        if hasattr(cfg, 'n_heads'):
             self.n_heads = cfg.n_heads
 
-        if cfg.task == 'classification':
+        if self.task == 'classification':
             self.conv3 = nn.Conv1d(cfg.out_channels, self.n_classes * self.n_heads, 1)
-        elif cfg.task == 'regression':
+        elif self.task == 'regression':
             self.conv4 = nn.Conv1d(cfg.out_channels, self.n_regs * self.n_heads, 1)
-        elif cfg.task == 'classification+regression':
+        elif self.task == 'classification+regression':
             self.conv3 = nn.Conv1d(cfg.out_channels, self.n_classes * self.n_heads, 1)
             self.conv4 = nn.Conv1d(cfg.out_channels, self.n_regs * self.n_heads, 1)
 
@@ -86,13 +89,13 @@ class SpliceAI(torch.nn.Module):
 
         skip = nn.functional.pad(skip, [-self.cfg.flank_size, -self.cfg.flank_size])
         skip = self.bn1(skip)
-        if self.cfg.task == 'classification':
+        if self.task == 'classification':
             out = self.conv3(skip)
             out = torch.softmax(out, dim=1)
-        elif self.cfg.task == 'regression':
+        elif self.task == 'regression':
             out = self.conv4(skip)
             out = torch.sigmoid(out, dim=1)
-        elif self.cfg.task == 'classification+regression':
+        elif self.task == 'classification+regression':
             out_cls = self.conv3(skip)
             out_cls = torch.softmax(out_cls, dim=1)
             out_reg = self.conv4(skip)
