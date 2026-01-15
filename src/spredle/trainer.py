@@ -109,11 +109,11 @@ class Trainer:
         loss_list.append(loss_avg)
         print(f'{ds} epoch:{epoch} avg loss: {" ".join([str(x) for x in loss_list])}')
 
-    def test(self, epoch, test=True):
+    def test(self, epoch):
         self.load_checkpoint(epoch)
         self.validate(epoch, test=test)
         self.get_confusion(dataset='test')
-        self.log_metrics(test=test)
+        self.log_metrics()
 
     def get_confusion(self, dataset='val', labels=[0, 1], down_sampling=100):
         self.model.eval()
@@ -191,7 +191,7 @@ class Trainer:
                     clss = pad + ''.join(clss) + pad
                     ouFile.write(f'{seq}\n{clss}\n')
 
-    def log_metrics(self, test=False):
+    def log_metrics(self):
         df = pd.DataFrame()
         cols = ['epoch', 'best_epoch', 'learning_rate',
                       'train_loss', 'val_loss', 'test_loss',
