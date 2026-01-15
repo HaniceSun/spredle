@@ -316,4 +316,3 @@ if __name__ == '__main__':
     trainer.run()
     trainer.test()
     trainer.predict()
-    trainer.saliency_map()
