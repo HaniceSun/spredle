@@ -112,7 +112,8 @@ class Trainer:
     def test(self, epoch):
         self.load_checkpoint(epoch)
         self.validate(epoch, test=test)
-        self.get_confusion(dataset='test')
+        if self.cfg.task in ['classification', 'classification+regression']:
+            self.get_confusion(dataset='test')
         self.log_metrics()
 
     def get_confusion(self, dataset='val', labels=[0, 1], down_sampling=100):
@@ -289,10 +290,12 @@ class Trainer:
 
         for epoch in range(start_epoch, end_epoch):
             self.train(epoch)
-            self.get_confusion(dataset='train')
+            if self.cfg.task in ['classification', 'classification+regression']:
+                self.get_confusion(dataset='train')
             if validate:
                 self.validate(epoch)
-                self.get_confusion(dataset='val')
+                if self.cfg.task in ['classification', 'classification+regression']:
+                    self.get_confusion(dataset='val')
 
                 if self.early_stopping:
                     self.early_stopping(self.val_loss[-1], epoch)
