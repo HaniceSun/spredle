@@ -219,17 +219,9 @@ class Trainer:
             df['learning_rate'] = self.learning_rates
 
         if os.path.exists(self.metrics_file):
-            df.to_csv(self.metrics_file, index=False, header=False, sep='\t', mode='a')
+            df.tail(1).to_csv(self.metrics_file, index=False, header=False, sep='\t', mode='a')
         else:
-            df.to_csv(self.metrics_file, index=False, header=True, sep='\t')
-
-        if not test:
-            plot_file = self.metrics_file.replace('.txt', '.pdf')
-            fig = plt.figure()
-            ax = fig.add_subplot()
-            ax.plot(df['epoch'], df['train_loss'], label='train_loss')
-            ax.plot(df['epoch'], df['val_loss'], label='val_loss')
-            plt.savefig(plot_file)
+            df.tail(1).to_csv(self.metrics_file, index=False, header=True, sep='\t')
 
     def count_parameters(self, with_lazy=True, show_details=False):
         if with_lazy:
@@ -304,7 +296,7 @@ class Trainer:
             if self.lr_scheduler:
                 self.lr_scheduler.step()
 
-        self.log_metrics()
+            self.log_metrics()
 
 if __name__ == '__main__':
     trainer = Trainer()
