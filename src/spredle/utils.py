@@ -13,43 +13,46 @@ sys.path.append(hyena_dir)
 from hyena import *
 
 class CustomLoss(torch.nn.Module):
-    def __init__(self, n_classes=3):
+    def __init__(self, n_classes=3, n_heads=1):
         super().__init__()
         self.n_classes = n_classes
+        self.n_heads = n_heads
 
     def forward(self, y_pred, y_true, epsilon=1e-10):
         L = []
-        for n in range(self.n_classes):
+        for n in range(self.n_classes * self.n_heads):
             s = y_true[:, n, :] * torch.log(y_pred[:, n, :] + epsilon)
             L.append(s)
         s = torch.stack(L, dim=0).sum(dim=0)
         return(-torch.mean(s))
 
 class CustomLossReg(torch.nn.Module):
-    def __init__(self, n_regs=1):
+    def __init__(self, n_regs=1, n_heads=1):
         super().__init__()
         self.n_regs = n_regs
+        self.n_heads = n_heads
 
     def forward(self, y_pred, y_true):
         L = []
-        for n in range(self.n_regs):
+        for n in range(self.n_regs * self.n_heads):
             s = (y_true[:, n, :] - y_pred[:, n, :]) ** 2
             L.append(s)
         s = torch.stack(L, dim=0).sum(dim=0)
         return(torch.mean(s))
 
 class CustomLossClsReg(torch.nn.Module):
-    def __init__(self, n_classes=3, n_regs=1):
+    def __init__(self, n_classes=3, n_regs=1, n_heads=1):
         super().__init__()
         self.n_classes = n_classes
         self.n_regs = n_regs
+        self.n_heads = n_heads
 
     def forward(self, y_pred, y_true, epsilon=1e-10):
-        for n in range(self.n_classes):
+        for n in range(self.n_classes * self.n_heads):
             s = y_true[:, n, :] * torch.log(y_pred[:, n, :] + epsilon)
             L.append(s)
-        for n in range(self.n_regs):
-            s_reg = - ((y_true[:, self.n_classes + n, :] - y_pred[:, self.n_classes + n, :]) ** 2)
+        for n in range(self.n_regs * self.n_heads):
+            s_reg = - ((y_true[:, self.n_classes * self.n_heads + n, :] - y_pred[:, self.n_classes * self.n_heads + n, :]) ** 2)
             L.append(s_reg)
         s = torch.stack(L, dim=0).sum(dim=0)
         return(-torch.mean(s))

@@ -37,7 +37,7 @@ class SpliceAI(torch.nn.Module):
     NWD4 = [[nF, 11, 1]] * nRB + [[nF, 11, 4]] * nRB + [[nF, 21, 10]] * nRB + [[nF, 41, 25]] * nRB
     '''
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, n_classes=3, n_regs=1, n_heads=1):
         super().__init__()
         self.cfg = cfg
         self.conv1 = nn.Conv1d(cfg.in_channels, cfg.out_channels, 1)
@@ -50,13 +50,24 @@ class SpliceAI(torch.nn.Module):
             if (i+1) % cfg.n_blocks == 0:
                 self.convs.append(nn.Conv1d(cfg.out_channels, cfg.out_channels, 1))
         self.bn1 = nn.BatchNorm1d(cfg.out_channels)
+
+        self.n_classes = n_classes
+        self.n_regs = n_regs
+        self.n_heads = n_heads
+        if 'n_classes' in vars(cfg):
+            self.n_classes = cfg.n_classes
+        if 'n_regs' in vars(cfg):
+            self.n_regs = cfg.n_regs
+        if 'n_heads' in vars(cfg):
+            self.n_heads = cfg.n_heads
+
         if cfg.task == 'classification':
-            self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
+            self.conv3 = nn.Conv1d(cfg.out_channels, self.n_classes * self.n_heads, 1)
         elif cfg.task == 'regression':
-            self.conv4 = nn.Conv1d(cfg.out_channels, cfg.n_regs, 1)
+            self.conv4 = nn.Conv1d(cfg.out_channels, self.n_regs * self.n_heads, 1)
         elif cfg.task == 'classification+regression':
-            self.conv3 = nn.Conv1d(cfg.out_channels, cfg.n_classes, 1)
-            self.conv4 = nn.Conv1d(cfg.out_channels, cfg.n_regs, 1)
+            self.conv3 = nn.Conv1d(cfg.out_channels, self.n_classes * self.n_heads, 1)
+            self.conv4 = nn.Conv1d(cfg.out_channels, self.n_regs * self.n_heads, 1)
 
     def forward(self, x, from_onehot=False):
         if not from_onehot:
