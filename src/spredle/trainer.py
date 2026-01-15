@@ -230,6 +230,7 @@ class Trainer:
             ax.plot(df['epoch'], df['train_loss'], label='train_loss')
             ax.plot(df['epoch'], df['val_loss'], label='val_loss')
             plt.savefig(plot_file)
+            plt.close()
 
     def count_parameters(self, with_lazy=True, show_details=False):
         if with_lazy:
