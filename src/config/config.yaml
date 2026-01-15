@@ -2,6 +2,7 @@ models:
   SpliceAI-1:
     class: SpliceAI
     params:
+      task: classification
       NWD: '[[32, 11, 1]] * 4'
       in_channels: 4
       out_channels: 32
@@ -16,6 +17,7 @@ models:
   SpliceAI-2:
     class: SpliceAI
     params:
+      task: classification
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4'
       in_channels: 4
       out_channels: 32
@@ -30,6 +32,7 @@ models:
   SpliceAI-3:
     class: SpliceAI
     params:
+      task: classification
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4 + [[32, 21, 10]] * 4'
       in_channels: 4
       out_channels: 32
@@ -44,6 +47,7 @@ models:
   SpliceAI-4:
     class: SpliceAI
     params:
+      task: classification
       NWD: '[[32, 11, 1]] * 4 + [[32, 11, 4]] * 4 + [[32, 21, 10]] * 4 + [[32, 41, 25]] * 4'
       in_channels: 4
       out_channels: 32
@@ -58,6 +62,7 @@ models:
   Hyena-1:
     class: HyenaGPT
     params:
+      task: classification
       in_channels: 4
       n_classes: 3
       vocab_size: 5
