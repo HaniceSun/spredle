@@ -8,7 +8,9 @@ import pylab as plt
 import seaborn as sns
 from importlib import resources
 
-hyena_dir = f'{resources.files("spredle").parent.parent}/vendor/hyena'
+BASE = resources.files(__package__.split(".")[0])
+config_dir = f'{BASE}/config'
+hyena_dir = f'{BASE.parent.parent}/vendor/hyena'
 sys.path.append(hyena_dir)
 from hyena import *
 

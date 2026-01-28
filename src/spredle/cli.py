@@ -1,5 +1,4 @@
 import argparse
-from importlib import resources
 from .downloader import DataDownloader
 from .preprocess import DataProcessor
 from .dataset import CustomDataset

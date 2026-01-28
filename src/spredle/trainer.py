@@ -5,7 +5,6 @@ from .utils import *
 class Trainer:
     def __init__(self, config_file='config.yaml', model_name='SpliceAI', train_file=None, val_file=None, test_file=None,
                  metrics_file=None, lr_lambda=None, print_every_n_batches=100):
-        self.config_dir = f'{resources.files("spredle").parent}/config'
         self.config = self.load_yaml(config_file)
 
         self.model_name = model_name
@@ -273,7 +272,7 @@ class Trainer:
 
     def load_yaml(self, config_file):
         if not os.path.exists(config_file):
-            config_file = self.config_dir + '/' + config_file
+            config_file = config_dir + '/' + config_file
             print(f'using config {config_file}')
         config = {}
         try:
